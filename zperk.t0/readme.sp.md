@@ -9,34 +9,34 @@
      ```sh
      msiexec.exe /i https://awscli.amazonaws.com/AWSCLIV2.msi
      ```
-   - Sigue el sentido común en el instalador de Windows.
+   - Sigue el sentido común en el instalador de Windows.<br />
      <img src="./img/cli.png" alt="cli" width="400"/>
 3. **Crear una cuenta de AWS:**
    - Ve a [AWS](https://aws.amazon.com/) y crea una cuenta si no tienes una.
 4. **Gestionar el acceso a los recursos de AWS (IAM):**
-   - Después de crear tu cuenta, busca "Gestionar el acceso a los recursos de AWS" (IAM):
+   - Después de crear tu cuenta, busca "Gestionar el acceso a los recursos de AWS" (IAM):<br />
      <img src="./img/aws-iam.png" alt="aws-iam" width="400"/>
 5. **Crear un usuario:**
-   - En el panel de IAM, crea un nuevo usuario:
+   - En el panel de IAM, crea un nuevo usuario:<br />
      <img src="./img/aws-user.png" alt="aws-user" width="400"/>
 6. **Establecer permisos de usuario:**
-   - Asigna los permisos apropiados al nuevo usuario:
+   - Asigna los permisos apropiados al nuevo usuario:<br />
      <img src="./img/aws-user-perms.png" alt="aws-user-perms" width="400"/>
 7. **Agregar etiquetas (opcional):**
    - Agrega etiquetas al usuario si es necesario.
 8. **Revisar el resumen del usuario:**
-   - Revisa la información resumida del nuevo usuario:
+   - Revisa la información resumida del nuevo usuario:<br />
      <img src="./img/aws-user-summ.png" alt="aws-user-summ" width="400"/>
 9. **Configurar la CLI de AWS:**
-   - Configura tu consola CLI de AWS usando las credenciales:
+   - Configura tu consola CLI de AWS usando las credenciales:<br />
      <img src="./img/aws-secrets.png" alt="aws-secrets" width="400"/>
 10. **Finalización:**
     - Tu CLI de AWS ahora está configurada.
     - Felicitaciones.
 11. **Pruebas:**
-    - Verifica una lista de instancias usando `aws ec2 list-instances`:
+    - Verifica una lista de instancias usando `aws ec2 list-instances`:<br />
       <img src="./img/cli-instances.png" alt="cli-instances" width="400"/>
-    - Prueba una instancia usando `aws ec2 describe-instances` y `aws ec2 describe-hosts`:
+    - Prueba una instancia usando `aws ec2 describe-instances` y `aws ec2 describe-hosts`:<br />
       <img src="./img/cli-instances-test.png" alt="cli-instances-test" width="400"/>
 12. **Eso es todo:**
     - Felicitaciones de nuevo.
