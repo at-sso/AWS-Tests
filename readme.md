@@ -1,3 +1,3 @@
 # AWS Tests
 
-stupid shit im doing for colleague
+- [How to install AWS](./zperk.t0/readme.md)
