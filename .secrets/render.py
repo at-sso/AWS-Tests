@@ -32,7 +32,7 @@ def main() -> int:
 
         # Read the CSV file
         df: DataFrame = pd.read_csv(abspath)  # type: ignore[reportUnknownMemberType]
-        # Mask the secret keys (assuming the column name is 'secret_key')
+        # Mask the secret keys (assuming the column name is 'secret_key') <- chatgpt moment
         if row != "":
             df[row] = df[row].apply(  # type: ignore[reportUnknownMemberType]
                 lambda x: "****" + x[-4:]  # type: ignore[reportUnknownLambdaType]
