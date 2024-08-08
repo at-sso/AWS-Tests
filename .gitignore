@@ -28,6 +28,7 @@
 *.svclog
 *.scc
 *.csv
+*.pdf
 
 # Cache files
 # files ending in .cache can be ignored
