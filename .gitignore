@@ -39,6 +39,8 @@
 # Others
 **/.vscode/**
 !**/.vscode/settings.json
+**/.secrets/private/out/**
+__pycache__
 
 # SQL Server files
 *.mdf

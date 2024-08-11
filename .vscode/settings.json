@@ -34,5 +34,9 @@
   "python.analysis.ignore": ["**/tests/**"],
   "[python]": {
     "editor.defaultFormatter": "ms-python.black-formatter"
+  },
+  "[json]": {
+    "editor.suggest.insertMode": "replace",
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }
