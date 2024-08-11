@@ -1,3 +1,5 @@
+__all__ = ["rds_host", "rds_username", "rds_password"]
+
 import sys
 import os
 from typing import Dict
@@ -13,25 +15,27 @@ from clownkey import dot_secrets  # type: ignore
 secrets: Dict[str, str] = dot_secrets.get("RDS")  # type: ignore
 
 # Your AWS RDS instance details
-host: str = secrets.get("endpoint")  # type: ignore
-username: str = secrets.get("username")  # type: ignore
-password: str = secrets.get("password")  # type: ignore
+rds_host: str = secrets.get("endpoint")  # type: ignore
+rds_username: str = secrets.get("username")  # type: ignore
+rds_password: str = secrets.get("password")  # type: ignore
 
 print("Testing AWS connection.")
 try:
     # Connect to the RDS instance
     cnx = mysql.connector.connect(
-        host=host,
+        host=rds_host,
         port=3306,
-        user=username,
-        password=password,
+        user=rds_username,
+        password=rds_password,
     )
 
     cursor = cnx.cursor()
     cursor.execute("SELECT DATABASE()")
-    print(cursor.fetchone(), "\nSuccess.")
+    cursor.fetchone()
+    print("Success.")
 
     cursor.close()
     cnx.close()
 except mysql.connector.Error as e:
     print(e)
+    raise ConnectionError("Connection to Amazon RDS was not possible.")
