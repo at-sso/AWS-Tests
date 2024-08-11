@@ -4,7 +4,7 @@
    Follow this [video tutorial](https://youtu.be/Ng_zi11N4_c) to create an Amazon RDS database. Make sure to select **MariaDB** instead of MySQL, as required.
 
 2. **Test the Connection**  
-   Run the [test script](./src/test.py) to verify the connection to the database.
+   Run the [test script](./src/rds_test.py) to verify the connection to the database.
 
    - **Note:** If you need to decrypt sensitive data, you'll need the correct passphrase. The script below handles the decryption process:
      ```py
