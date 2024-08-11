@@ -9,10 +9,10 @@ sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), "../../.secrets"))
 )
 
-from clownkey import dot_secrets  # type: ignore
+from clownkey import dot_secrets
 
 # Type hint.
-secrets: Dict[str, str] = dot_secrets.get("RDS")  # type: ignore
+secrets: Dict[str, str] = dot_secrets.get("RDS")
 
 # Your AWS RDS instance details
 rds_host: str = secrets.get("endpoint")  # type: ignore
