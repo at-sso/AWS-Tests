@@ -1,0 +1,27 @@
+{% extends 'base.html' %} {% block content %}
+<h2>Update Loan</h2>
+<form method="POST">
+  <label for="user_id">User ID:</label>
+  <input
+    type="number"
+    name="user_id"
+    value="{{ loan.user_id }}"
+    required
+  /><br />
+  <label for="book_id">Book ID:</label>
+  <input
+    type="number"
+    name="book_id"
+    value="{{ loan.book_id }}"
+    required
+  /><br />
+  <label for="loan_date">Loan Date:</label>
+  <input
+    type="date"
+    name="loan_date"
+    value="{{ loan.loan_date.strftime('%Y-%m-%d') }}"
+    required
+  /><br />
+  <input type="submit" value="Update Loan" />
+</form>
+{% endblock %}

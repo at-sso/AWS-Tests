@@ -1,0 +1,35 @@
+{% extends 'base.html' %} {% block content %}
+<h2>Manage Loans</h2>
+
+<!-- POST request to add a new loan -->
+<h3>Add a New Loan</h3>
+<form method="POST">
+  <label for="user_id">User ID:</label>
+  <input type="number" name="user_id" required /><br />
+  <label for="book_id">Book ID:</label>
+  <input type="number" name="book_id" required /><br />
+  <input type="submit" value="Add Loan" />
+</form>
+
+<!-- GET request to display all loans -->
+<h3>All Loans</h3>
+<button onclick="window.location.href=window.location.href">
+  Reload Loans
+</button>
+<ul>
+  {% for loan in loans %}
+  <li>
+    User ID: {{ loan.user_id }}, Book ID: {{ loan.book_id }}, Loan Date: {{
+    loan.loan_date.strftime('%Y-%m-%d') }}
+    <form
+      method="POST"
+      action="{{ url_for('main.delete_loan', id=loan.id) }}"
+      style="display: inline"
+    >
+      <button type="submit">Delete</button>
+    </form>
+    <a href="{{ url_for('main.update_loan', id=loan.id) }}">Update</a>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

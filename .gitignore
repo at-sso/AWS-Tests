@@ -29,6 +29,7 @@
 *.scc
 *.csv
 *.pdf
+*.db
 
 # Cache files
 # files ending in .cache can be ignored
