@@ -1,4 +1,4 @@
-__all__ = ["flag_decrypt", "flag_hide", "flag_win"]
+__all__ = ["flag_decrypt", "flag_secrets", "flag_win"]
 
 from argparse import ArgumentParser, Namespace
 
@@ -37,15 +37,15 @@ def parse_arguments() -> Namespace:
 __args: Namespace = parse_arguments()
 flag_decrypt = __args.decrypt
 """Decrypts the files directly."""
-flag_hide = __args.hide
+flag_secrets = __args.hide
 """Doesn't show the secret data in the terminal."""
 flag_win = __args.win
 """Skips the winget operation."""
 
 if flag_decrypt:
-    print(f"Decrypting files with keys: {'[secret]' if flag_hide else flag_decrypt}")
+    print(f"Decrypting files with keys: {'[secret]' if flag_secrets else flag_decrypt}")
 # Handle the `-H` or `-hide` argument
-if flag_hide:
+if flag_secrets:
     print("Hiding secret data from the terminal.")
 # Handle the `-w` or `-win` argument
 if flag_win:

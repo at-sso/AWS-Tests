@@ -41,6 +41,7 @@
 !**/.vscode/settings.json
 **/.secrets/private/out/**
 __pycache__
+**/download
 
 # SQL Server files
 *.mdf

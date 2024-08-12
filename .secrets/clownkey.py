@@ -1,4 +1,5 @@
 __all__ = [
+    "this_path",
     "easter_egg",
     "dot_secrets",
     "access_keys",
@@ -22,10 +23,17 @@ if platform.system() == "Windows" and not flag_win:
     print("Trying to install 'Gpg4win'. This tool is needed to decrypt the files.")
     subprocess.run("winget install --id GnuPG.Gpg4win")
 
-
-easter_egg: str = f"{os.path.abspath('.')}/.secrets/private".replace("\\", "/")
+this_path: str = os.path.abspath(".").replace("\\", "/")
+easter_egg: str = f"{this_path}/.secrets/private"
 """Returns the standardized path for the easter egg."""
+print("This Path ->", this_path)
 print("Easter Eggs ->", easter_egg)
+
+try:
+    # Ensure the download directory exists
+    os.mkdir(os.path.join(f"{this_path}/env", f"{this_path}/env/download"))
+except:
+    pass
 
 
 def __load_csv(abspath: str, mask_column: str = "") -> pd.DataFrame:
@@ -149,9 +157,14 @@ else:
 access_keys: DataFrame = __load_csv(__access_keys, "Secret access key")
 credentials: DataFrame = __load_csv(__credentials, "Password")
 
-if not flag_hide:
+if not flag_secrets:
     print(
         f"dot_secrets:\n{dot_secrets_formatted}\n"
         f"access_keys:\n{access_keys}\n"
         f"credentials:\n{credentials}"
     )
+
+rds_secrets = dot_secrets["RDS"]
+s3_secrets = dot_secrets["S3"]
+
+print("[clownkey end]\n\n\n")

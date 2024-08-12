@@ -64,7 +64,7 @@ def main() -> int:
     # Connect to Amazon RDS
     try:
         conn = mysql.connector.connect(
-            user=rds_username, password=rds_password, host=rds_host
+            user=rds_username, password=rds_password, host=rds_endpoint
         )
         cursor = conn.cursor()
         print("Connected to the database.")
@@ -77,7 +77,7 @@ def main() -> int:
         elif err.errno == errorcode.ER_BAD_DB_ERROR:
             print("Database does not exist. Creating database.")
             conn = mysql.connector.connect(
-                user=rds_username, password=rds_password, host=rds_host
+                user=rds_username, password=rds_password, host=rds_endpoint
             )
             cursor = conn.cursor()
             cursor.execute("CREATE DATABASE bookstore")
