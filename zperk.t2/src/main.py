@@ -1,6 +1,7 @@
-from typing import Callable, Dict, Any
+import sys
 import mysql.connector
 from mysql.connector import errorcode
+from typing import Callable, Dict, Any
 from rds_test import *
 
 
@@ -121,9 +122,14 @@ friendly_code: Dict[int, str] = {
     1: "Connection error.",
     2: "Bad credentials.",
     3: "Database error.",
+    4: "Unhandled error.",
 }
 
 if __name__ == "__main__":
-    a = main()
+    try:
+        a = main()
+    except Exception as err:
+        print(err)
+        a = 4
     print(friendly_code[a])
-    exit(a)
+    sys.exit(a)
