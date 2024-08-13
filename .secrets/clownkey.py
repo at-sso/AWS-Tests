@@ -154,17 +154,20 @@ if not __files_exist():
 else:
     print("Data was already decrypted.")
 
-access_keys: DataFrame = __load_csv(__access_keys, "Secret access key")
+access_keys: DataFrame = __load_csv(__access_keys, "Secret")
 credentials: DataFrame = __load_csv(__credentials, "Password")
 
 if not flag_secrets:
     print(
-        f"dot_secrets:\n{dot_secrets_formatted}\n"
-        f"access_keys:\n{access_keys}\n"
+        f".secrets:\n{dot_secrets_formatted}\n\n"
+        f"access_keys:\n{access_keys}\n\n"
         f"credentials:\n{credentials}"
     )
+else:
+    print("[secrets...]")
 
-rds_secrets = dot_secrets["RDS"]
-s3_secrets = dot_secrets["S3"]
+unsecure: str = dot_secrets["unsecure"]
+rds_secrets: Dict[str, str] = dot_secrets["RDS"]
+s3_secrets: Dict[str, str] = dot_secrets["S3"]
 
 print("[clownkey end]\n\n\n")

@@ -8,7 +8,7 @@
   "python.analysis.useLibraryCodeForTypes": true,
   "python.analysis.diagnosticSeverityOverrides": {
     "reportUnknownMemberType": "information",
-    "reportMissingTypeStubs": "information",
+    "reportMissingTypeStubs": "none",
     "reportReturnType": "information",
     "reportUnusedExcept": "information",
     "reportUnknownVariableType": "information",

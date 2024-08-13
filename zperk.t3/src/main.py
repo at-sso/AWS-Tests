@@ -12,11 +12,11 @@ sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), "../../.secrets"))
 )
 
-from clownkey import this_path, s3_secrets, flag_secrets  # type:ignore
+from clownkey import this_path, s3_secrets, flag_secrets  # type: ignore
 
 # Constants
-BUCKET_NAME: str = s3_secrets["bucket_name"]
-BUCKET_LIST_CMD: str = s3_secrets["bucket_list"].replace("{name}", BUCKET_NAME)
+BUCKET_NAME: str = s3_secrets["bucket_name"]  # type: ignore[reportUnknownVariableType]
+BUCKET_LIST_CMD: str = s3_secrets["bucket_list"].replace("{name}", BUCKET_NAME) # type: ignore[reportUnknownMemberType]
 DOWNLOAD_PATH: str = f"{this_path}/env/download"
 LOCAL_FILES_PATH: str = f"{this_path}/zperk.t3/src/img"
 MAIN_MENU: str = (
@@ -99,7 +99,7 @@ def image_to_ascii(file_name: str, width: int = 100) -> str:
         ).convert("L")
 
         ascii_chars = "@%#*+=-:. "
-        pixels: List[int] = list(image.getdata())
+        pixels: List[int] = list(image.getdata())  # type: ignore[reportArgumentType]
         ascii_str: str = "".join([ascii_chars[pixel // 32] for pixel in pixels])
 
         ascii_image: str = "\n".join(
@@ -113,7 +113,7 @@ def image_to_ascii(file_name: str, width: int = 100) -> str:
 
 
 def main() -> int:
-    s3_client: Any = boto3.client("s3")
+    s3_client: Any = boto3.client("s3")  # type: ignore[reportUnknownMemberType]
 
     actions: Dict[int, Callable[..., None]] = {
         1: lambda file_key: upload_to_s3(

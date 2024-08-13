@@ -9,7 +9,7 @@ sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), "../../.secrets"))
 )
 
-from clownkey import rds_secrets  # type:ignore
+from clownkey import rds_secrets, unsecure  # type:ignore
 
 # Type hints.
 rds: Any = rds_secrets
@@ -17,7 +17,7 @@ rds: Any = rds_secrets
 # Your AWS RDS instance details
 rds_endpoint: str = rds["endpoint"]  # type: ignore
 rds_username: str = rds["username"]  # type: ignore
-rds_password: str = rds["password"]  # type: ignore
+rds_password: str = unsecure  # type: ignore
 
 print("Testing AWS connection.")
 try:
