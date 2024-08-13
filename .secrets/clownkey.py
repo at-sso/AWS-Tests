@@ -15,6 +15,7 @@ import pandas as pd
 from pandas import DataFrame
 from getpass import getpass as gp
 from typing import Any, Dict
+from typing_extensions import LiteralString
 
 from flags import *
 
@@ -32,7 +33,7 @@ print("Easter Eggs ->", easter_egg)
 try:
     # Ensure the download directory exists
     os.mkdir(os.path.join(f"{this_path}/env", f"{this_path}/env/download"))
-except:
+except:  # The directory does exist. I don't know why they raise an exception in this case like wtf
     pass
 
 
@@ -108,15 +109,21 @@ __access_keys: str = f"{easter_egg}/out/accessKeys.gpg.csv"
 __credentials: str = f"{easter_egg}/out/credentials.gpg.csv"
 
 dot_secrets: Dict[str, Any] = {}
+"""The '.secrets' JSON credentials."""
+dot_secrets_formatted: str = ""
+"""The '.secrets' JSON credentials, formatted."""
+LE_SECRETS: LiteralString = "[secrets]"
+"""The literal '[secrets]' string."""
 
-# Try to load the secrets file if it exists
+# Try to load the '.secrets' file if it exists
 try:
     with open(__dot_secrets, "r") as file:
         dot_secrets = json.load(file)
-except FileNotFoundError:
+except FileNotFoundError:  # The file wasn't encrypted yet.
     pass
 finally:
     dot_secrets_formatted = json.dumps(dot_secrets, indent=4) if dot_secrets else ""
+
 
 # If the required files don't already exist, start the operation
 if not __files_exist():
@@ -145,7 +152,7 @@ if not __files_exist():
             # Once everything is set, get the decrypted json file.
             with open(__dot_secrets, "r") as file:
                 dot_secrets = json.load(file)
-                dot_secrets_formatted: str = json.dumps(dot_secrets, indent=4)
+                dot_secrets_formatted = json.dumps(dot_secrets, indent=4)
         except Exception as e:
             print(f"Decryption failed:{e}")
             exit(1)
@@ -155,19 +162,22 @@ else:
     print("Data was already decrypted.")
 
 access_keys: DataFrame = __load_csv(__access_keys, "Secret")
+"""CSV Access keys for... who knows."""
 credentials: DataFrame = __load_csv(__credentials, "Password")
+"""CSV Credentials for... :)."""
 
-if not flag_secrets:
+if flag_secrets:
+    print(f"Hiding secret data from the terminal will also censor the {LE_SECRETS}!")
+else:
     print(
         f".secrets:\n{dot_secrets_formatted}\n\n"
         f"access_keys:\n{access_keys}\n\n"
         f"credentials:\n{credentials}"
     )
-else:
-    print("[secrets...]")
 
 unsecure: str = dot_secrets["unsecure"]
 rds_secrets: Dict[str, str] = dot_secrets["RDS"]
 s3_secrets: Dict[str, str] = dot_secrets["S3"]
+dynamo_secret: str = dot_secrets["DynamoDB"]
 
 print("[clownkey end]\n\n\n")

@@ -12,11 +12,11 @@ sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), "../../.secrets"))
 )
 
-from clownkey import this_path, s3_secrets, flag_secrets  # type: ignore
+from clownkey import this_path, s3_secrets, flag_secrets, LE_SECRETS  # type: ignore
 
 # Constants
 BUCKET_NAME: str = s3_secrets["bucket_name"]  # type: ignore[reportUnknownVariableType]
-BUCKET_LIST_CMD: str = s3_secrets["bucket_list"].replace("{name}", BUCKET_NAME) # type: ignore[reportUnknownMemberType]
+BUCKET_LIST_CMD: str = s3_secrets["bucket_list"].replace("{name}", BUCKET_NAME)  # type: ignore[reportUnknownMemberType]
 DOWNLOAD_PATH: str = f"{this_path}/env/download"
 LOCAL_FILES_PATH: str = f"{this_path}/zperk.t3/src/img"
 MAIN_MENU: str = (
@@ -73,7 +73,7 @@ def download_from_s3(download_path: str, bucket: str, key: str, s3_client: Any) 
 
 def delete_all_s3_files(bucket_name: str, s3_client: Any) -> None:
     """Deletes all files in an S3 bucket."""
-    show_bucket: str = "[secret]" if flag_secrets else bucket_name
+    show_bucket: str = LE_SECRETS if flag_secrets else bucket_name
     try:
         response = s3_client.list_objects_v2(Bucket=bucket_name)
         if "Contents" not in response:

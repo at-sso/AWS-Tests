@@ -46,7 +46,7 @@ if flag_decrypt:
     print(f"Decrypting files with keys: {'[secret]' if flag_secrets else flag_decrypt}")
 # Handle the `-H` or `-hide` argument
 if flag_secrets:
-    print("Hiding secret data from the terminal.")
+    print("Hiding secret data from the terminal. Don't try to debug now!")
 # Handle the `-w` or `-win` argument
 if flag_win:
     print("Skipping the winget operation.")
