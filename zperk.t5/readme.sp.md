@@ -61,7 +61,9 @@ Todos estos datos se están obteniendo de DynamoDB.
 
 - **Desplegar Datos:** Crea la tabla DynamoDB si no existe.
   ![desplegar](./img/deploy.png)
+
 - **Comprobar Datos:** Muestra los datos actualmente en la tabla DynamoDB.
   ![comprobar](./img/check.png)
+
 - **Destruir Datos:** Elimina la tabla DynamoDB.
   ![destruir](./img/destroy.png)

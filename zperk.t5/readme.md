@@ -61,7 +61,9 @@ All of this data is being fetch from DynamoDB.
 
 - **Deploy Data:** Creates the DynamoDB table if it doesn't exist.
   ![deploy](./img/deploy.png)
+
 - **Check Data:** Displays the data currently in the DynamoDB table.
   ![check](./img/check.png)
+
 - **Destroy Data:** Deletes the DynamoDB table.
   ![destroy](./img/destroy.png)
