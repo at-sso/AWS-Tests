@@ -7,3 +7,4 @@
 - [How to RDS](./zperk.t2/readme.md)
 - [S3 File Manager](./zperk.t3/readme.md)
 - [Library Management Web Application](./zperk.t4/readme.md)
+- [DynamoDB Library Management System](./zperk.t5/readme.md)

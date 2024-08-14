@@ -1,134 +1,131 @@
 import sys
-import os
-import boto3
 import json
 from datetime import datetime
-from typing import Callable, Dict, Any
+from typing import Callable, Dict, Any, List
+from helpers import *
 
-sys.path.append(
-    os.path.abspath(os.path.join(os.path.dirname(__file__), "../../.secrets"))
-)
 
-from clownkey import dynamo_secret, flag_secrets, LE_SECRETS  # type: ignore
-
-# Setup DynamoDB resource
-dynamodb: Any = boto3.resource("dynamodb", region_name="us-east-1")
-table_name = LE_SECRETS if flag_secrets else dynamo_secret
-table = dynamodb.Table(dynamo_secret)
+def scan_table() -> List[Dict[str, Any]]:
+    global extr_msg
+    try:
+        response = table.scan()
+        return response.get("Items", [])
+    except Exception as e:
+        extr_msg = f"Error scanning table: {e}"
+        return []
 
 
 def deploy_data() -> None:
-    # Create the DynamoDB table
-    table: Any = dynamodb.create_table(
-        TableName=dynamo_secret,
-        KeySchema=[
-            {"AttributeName": "UserID", "KeyType": "HASH"},  # Partition key
-            {"AttributeName": "BookID", "KeyType": "RANGE"},  # Sort key
-        ],
-        AttributeDefinitions=[
-            {"AttributeName": "UserID", "AttributeType": "S"},
-            {"AttributeName": "BookID", "AttributeType": "S"},
-        ],
-        ProvisionedThroughput={"ReadCapacityUnits": 5, "WriteCapacityUnits": 5},
-    )
-    table.wait_until_exists()
-    print(f"DynamoDB table {table_name} created successfully.")
+    global extr_msg
+    try:
+        table = dynamodb.create_table(
+            TableName=dynamo_secret,
+            KeySchema=[
+                {"AttributeName": "UserID", "KeyType": "HASH"},
+                {"AttributeName": "BookID", "KeyType": "RANGE"},
+            ],
+            AttributeDefinitions=[
+                {"AttributeName": "UserID", "AttributeType": "S"},
+                {"AttributeName": "BookID", "AttributeType": "S"},
+            ],
+            ProvisionedThroughput={"ReadCapacityUnits": 5, "WriteCapacityUnits": 5},
+        )
+        table.wait_until_exists()
+        extr_msg = f"DynamoDB table {table_name} created successfully."
+    except Exception as e:
+        extr_msg = f"Error creating table: {e}"
 
 
 def check_data() -> None:
-    response: Any = table.scan()
-    items: Any = response.get("Items", [])
-    print(f"Data in {table_name}:")
+    global extr_msg
+    items = scan_table()
+    extr_msg = f"Data in {table_name}:"
     for item in items:
-        print(json.dumps(item, indent=4))
+        extr_msg = json.dumps(item, indent=4)
 
 
 def destroy_data() -> None:
-    table.delete()
-    print(f"DynamoDB table {table_name} deleted successfully.")
+    global extr_msg
+    try:
+        table.delete()
+        extr_msg = f"DynamoDB table {table_name} deleted successfully."
+    except Exception as e:
+        extr_msg = f"Error deleting table: {e}"
 
 
 def borrow_book() -> None:
-    user_id = input("Enter User ID: ")
-    book_id = input("Enter Book ID: ")
+    global extr_msg
+    user_id = id_handler("User")
+    book_id = id_handler("Book")
+
     borrow_time = datetime.now().isoformat()
 
-    # Insert record into DynamoDB
-    table.put_item(
-        Item={"UserID": user_id, "BookID": book_id, "BorrowTime": borrow_time}
-    )
-    print(f"User {user_id} borrowed book {book_id} at {borrow_time}.")
+    try:
+        table.put_item(
+            Item={"UserID": user_id, "BookID": book_id, "BorrowTime": borrow_time}
+        )
+        extr_msg = f"User {user_id} borrowed book {book_id} at {borrow_time}."
+    except Exception as e:
+        extr_msg = f"Error borrowing book: {e}"
 
 
 def list_borrowers() -> None:
-    # Query DynamoDB for all users who borrowed books
-    response = table.scan()
-    items = response.get("Items", [])
+    global extr_msg
+    items = scan_table()
 
-    print("Users who have borrowed books:")
+    extr_msg = "Users who have borrowed books:"
     for item in items:
-        print(f"UserID: {item['UserID']}, BookID: {item['BookID']}")
+        extr_msg = f"UserID: {item['UserID']}, BookID: {item['BookID']}"
 
 
 def list_users_with_time() -> None:
-    # Query DynamoDB for all users and their borrow times
-    response = table.scan()
-    items = response.get("Items", [])
+    global extr_msg
+    items = scan_table()
 
-    print("Users and their borrow times:")
+    extr_msg = "Users and their borrow times:"
     for item in items:
+        extr_msg = f"UserID: {item['UserID']}, BookID: {item['BookID']}, BorrowTime: {item['BorrowTime']}"
+
+
+def selector_is_invalid(selection: str) -> bool:
+    global extr_msg
+    if selection not in ["1", "2", "3"]:
+        extr_msg = "Select a valid input."
+        return True
+    return False
+
+
+def execute_action(selection: str, actions: Dict[int, Callable[[], None]]) -> bool:
+    global extr_msg
+    try:
+        actions[int(selection)]()
+        return False
+    except Exception as e:
+        extr_msg = f"Execution error: {e}"
+        return True
+
+
+def debug_mode() -> int:
+    global extr_msg
+    while True:
+        clearsrc()
         print(
-            f"UserID: {item['UserID']}, BookID: {item['BookID']}, BorrowTime: {item['BorrowTime']}"
+            "1. Deploy data\n2. Check data\n3. Destroy all data\n4. Return\n", extr_msg
         )
+        selection = input("> ")
+        if selection == "4":
+            extr_msg = ""
+            return 0
+        if selector_is_invalid(selection):
+            continue
 
+        actions = action_helper(deploy_data, check_data, destroy_data)
 
-IntToFunctionDict = Dict[int, Callable[[], Any]]
+        if execute_action(selection, actions):
+            continue
 
 
 def main() -> int:
-
-    execute_debug: IntToFunctionDict = {
-        1: deploy_data,
-        2: check_data,
-        3: destroy_data,
-    }
-
-    execute: IntToFunctionDict = {
-        1: borrow_book,
-        2: list_borrowers,
-        3: list_users_with_time,
-    }
-
-    clearsrc = lambda: os.system("cls" if os.name == "nt" else "clear")
-
-    def selector_is_invalid(selection: str) -> bool:
-        if selection not in ["1", "2", "3"]:
-            print("Select a valid input.")
-            return True
-        return False
-
-    def execute_action(selection: str, actions: IntToFunctionDict) -> int:
-        try:
-            actions[int(selection)]()
-            return 0
-        except Exception as err:
-            print(f"Error: {err}")
-            return 1
-
-    def debug_mode() -> int:
-        while True:
-            clearsrc()
-            print("1. Deploy data\n2. Check data\n3. Destroy all data\n4. Return")
-            selection: str = input("> ")
-            if selection == "4":
-                return 0
-            if selector_is_invalid(selection):
-                continue
-
-            return execute_action(selection, execute_debug)
-
-    a: int = 0
-
     while True:
         clearsrc()
         print(
@@ -136,9 +133,10 @@ def main() -> int:
             "2. List of users that borrowed books\n"
             "3. List of users and take in time\n"
             "4. Debug\n"
-            "0. Exit"
+            "0. Exit\n",
+            extr_msg,
         )
-        selection: str = input("> ")
+        selection = input("> ")
 
         if selection == "0":
             break
@@ -148,11 +146,12 @@ def main() -> int:
         if selector_is_invalid(selection):
             continue
 
-        a = execute_action(selection, execute)
+        actions = action_helper(borrow_book, list_borrowers, list_users_with_time)
+        if execute_action(selection, actions):
+            return 1
 
-    return a
+    return 0
 
 
 if __name__ == "__main__":
-    a = main()
-    sys.exit(a)
+    sys.exit(main())
