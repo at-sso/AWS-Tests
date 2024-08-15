@@ -5,7 +5,6 @@ import platform
 import pandas as pd
 from pandas import DataFrame
 from getpass import getpass as gp
-from typing import Any
 
 from flags import *
 from var import *
@@ -153,13 +152,13 @@ else:
     )
 
 
-def __update_value(key: str) -> Any:
-    return dot_secrets[key]
+unsecure = dot_secrets["unsecure"]
+rds_secrets = dot_secrets["RDS"]
+s3_secrets = dot_secrets["S3"]
+dynamo_secret = dot_secrets["DynamoDB"]
+lambda_secrets = dot_secrets["Lambda"]
+lambda_id = lambda_secrets["id"]
+lambda_role = lambda_secrets["role"]
 
-
-unsecure = __update_value("unsecure")
-rds_secrets = __update_value("RDS")
-s3_secrets = __update_value("S3")
-dynamo_secret = __update_value("DynamoDB")
 
 print("[clownkey end]\n\n\n")

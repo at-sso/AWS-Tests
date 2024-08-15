@@ -8,3 +8,4 @@
 - [S3 File Manager](./zperk.t3/readme.md)
 - [Library Management Web Application](./zperk.t4/readme.md)
 - [DynamoDB Library Management System](./zperk.t5/readme.md)
+- [AWS Lambda Book Loan Management](./zperk.t6/readme.md)

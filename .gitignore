@@ -30,6 +30,7 @@
 *.csv
 *.pdf
 *.db
+*.zip
 
 # Cache files
 # files ending in .cache can be ignored

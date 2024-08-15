@@ -8,6 +8,8 @@ __all__ = [
     "rds_secrets",
     "s3_secrets",
     "dynamo_secret",
+    "lambda_id",
+    "lambda_role",
     "dot_secrets_formatted",
     "this_path",
     "easter_egg",
@@ -26,23 +28,30 @@ CREDENTIALS_FILE = "credentials.gpg.csv"
 LE_SECRETS: LiteralString = "[secrets]"
 """Literal '[secrets]' string."""
 
-# You can update this with your own credentials.
+########################### You can update this with your own credentials. ###########################
+
 dot_secrets: Dict[str, Any] = {
-    "unsecure": "your_generic_password",
+    "unsecure": "your generic password",
     "RDS": {
         "username": "admin",
-        "endpoint": "your_rds_endpoint",
+        "endpoint": "your rds endpoint",
     },
     "S3": {
-        "bucket_name": "your_bucket_name",
+        "bucket_name": "your bucket name",
         "bucket_list": "aws s3 ls s3://{name} --recursive",
     },
     "DynamoDB": "DynamoDB",
+    "LambdaRole": {
+        "id": "123456789012",
+        "role": "service-role/",
+    },
 }
 """The '.secrets' JSON credentials."""
 
+########################### Modifying anything after this takes no effect. ###########################
+
 unsecure: str = ""
-"""Generic password I use across all password dependand AWS projects."""
+"""Generic password I use across all password dependant AWS projects."""
 
 rds_secrets: Dict[str, str] = {}
 """Array with 'username' and 'endpoint' keys."""
@@ -53,9 +62,14 @@ s3_secrets: Dict[str, str] = {}
 dynamo_secret: str = ""
 """Generic DynamoDB name."""
 
-dot_secrets_formatted: str = ""
-"""The '.secrets' JSON credentials, formatted. Usefull for printing."""
+lambda_id: str = ""
+"""Generic lambda account id."""
 
+lambda_role: str = ""
+"""Generic lambda role."""
+
+dot_secrets_formatted: str = ""
+"""The '.secrets' JSON credentials, formatted. Useful for printing."""
 
 this_path: str = os.path.abspath(".").replace("\\", "/")
 """Returns the current absolute path."""
