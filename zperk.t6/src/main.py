@@ -1,5 +1,4 @@
-# I ******* hate AWS man what a piece of **** service just use docker its way better than this ********
-# Btw I'm not fixing this ****
+# Sorry I got mad
 
 import sys
 import os
