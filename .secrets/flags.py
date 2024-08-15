@@ -1,4 +1,4 @@
-__all__ = ["flag_decrypt", "flag_secrets", "flag_win"]
+__all__ = ["flag_decrypt", "flag_skip_decrypt", "flag_secrets", "flag_win"]
 
 from argparse import ArgumentParser, Namespace
 
@@ -6,7 +6,7 @@ from argparse import ArgumentParser, Namespace
 def parse_arguments() -> Namespace:
     parser = ArgumentParser(description="Handle decryption and configuration options.")
 
-    # Add the `-d` or `-decrypt` argument
+    # Useful if you are me and want to decrypt the files directly.
     parser.add_argument(
         "-decrypt",
         "-d",
@@ -15,7 +15,15 @@ def parse_arguments() -> Namespace:
         help="Decrypts the files directly.",
     )
 
-    # Add the `-H` or `-hide` argument
+    # Useful if you've already set your personal keys in 'clownkey'.
+    parser.add_argument(
+        "-skip_decrypt",
+        "-D",
+        action="store_true",
+        help="Skips file decryption.",
+    )
+
+    # Censors all secret data in the terminal.
     parser.add_argument(
         "-hide",
         "-H",
@@ -23,7 +31,7 @@ def parse_arguments() -> Namespace:
         help="Doesn't show the secret data in the terminal.",
     )
 
-    # Add the `-w` or `-win` argument
+    # Skips the winget operation on Windows.
     parser.add_argument(
         "-win",
         "-w",
@@ -37,16 +45,21 @@ def parse_arguments() -> Namespace:
 __args: Namespace = parse_arguments()
 flag_decrypt = __args.decrypt
 """Decrypts the files directly."""
+flag_skip_decrypt = __args.skip_decrypt
+"""Skips file decryption."""
 flag_secrets = __args.hide
 """Doesn't show the secret data in the terminal."""
 flag_win = __args.win
 """Skips the winget operation."""
 
+if flag_decrypt and flag_skip_decrypt:
+    raise SyntaxError("Do not combine '-decrypt' and '-skip_decrypt'.")
 if flag_decrypt:
-    print(f"Decrypting files with keys: {'[secret]' if flag_secrets else flag_decrypt}")
-# Handle the `-H` or `-hide` argument
+    a = "[secrets]" if flag_secrets else flag_decrypt
+    print(f"Decrypting files with keys: {a}")
+if flag_skip_decrypt:
+    print("Skipping file decryption")
 if flag_secrets:
     print("Hiding secret data from the terminal. Don't try to debug now!")
-# Handle the `-w` or `-win` argument
 if flag_win:
     print("Skipping the winget operation.")

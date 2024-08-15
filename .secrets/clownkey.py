@@ -1,12 +1,3 @@
-__all__ = [
-    "this_path",
-    "easter_egg",
-    "dot_secrets",
-    "access_keys",
-    "credentials",
-    "dot_secrets_formatted",
-]
-
 import subprocess
 import json
 import os
@@ -14,26 +5,24 @@ import platform
 import pandas as pd
 from pandas import DataFrame
 from getpass import getpass as gp
-from typing import Any, Dict
-from typing_extensions import LiteralString
+from typing import Any
 
 from flags import *
+from var import *
 
 # Installs Gpg4win on Windows if not already installed.
 if platform.system() == "Windows" and not flag_win:
     print("Trying to install 'Gpg4win'. This tool is needed to decrypt the files.")
     subprocess.run("winget install --id GnuPG.Gpg4win")
 
-this_path: str = os.path.abspath(".").replace("\\", "/")
-easter_egg: str = f"{this_path}/.secrets/private"
-"""Returns the standardized path for the easter egg."""
+
 print("This Path ->", this_path)
 print("Easter Eggs ->", easter_egg)
 
 try:
     # Ensure the download directory exists
     os.mkdir(os.path.join(f"{this_path}/env", f"{this_path}/env/download"))
-except:  # The directory does exist. I don't know why they raise an exception in this case like wtf
+except:  # The directory does exist. I don't know why they raise an exception in this case like wtf dude, not cool.
     pass
 
 
@@ -103,21 +92,9 @@ def __files_exist() -> bool:
     )
 
 
-# Paths to the decrypted files
-__dot_secrets: str = f"{easter_egg}/out/.secrets"
-__access_keys: str = f"{easter_egg}/out/accessKeys.gpg.csv"
-__credentials: str = f"{easter_egg}/out/credentials.gpg.csv"
-
-dot_secrets: Dict[str, Any] = {}
-"""The '.secrets' JSON credentials."""
-dot_secrets_formatted: str = ""
-"""The '.secrets' JSON credentials, formatted."""
-LE_SECRETS: LiteralString = "[secrets]"
-"""The literal '[secrets]' string."""
-
 # Try to load the '.secrets' file if it exists
 try:
-    with open(__dot_secrets, "r") as file:
+    with open(dot_secrets_path, "r") as file:
         dot_secrets = json.load(file)
 except FileNotFoundError:  # The file wasn't encrypted yet.
     pass
@@ -126,16 +103,16 @@ finally:
 
 
 # If the required files don't already exist, start the operation
-if not __files_exist():
+if not __files_exist() and not flag_skip_decrypt:
     # Helper flag to identify if user input is needed to complete the operation
     input_passphrase: bool = False
 
     # If the decrypt flag was set, set the path variables.
     if flag_decrypt:
         try:
-            __dot_secrets = __decrypt(flag_decrypt[0], ".secrets")
-            __access_keys = __decrypt(flag_decrypt[1], "accessKeys.gpg", True)
-            __credentials = __decrypt(flag_decrypt[2], "credentials.gpg", True)
+            dot_secrets_path = __decrypt(flag_decrypt[0], ".secrets")
+            access_keys_path = __decrypt(flag_decrypt[1], "accessKeys.gpg", True)
+            credentials_path = __decrypt(flag_decrypt[2], "credentials.gpg", True)
         except Exception as e:
             print(f"An error occurred:{e}\nTrying to get passphrases from user input.")
             input_passphrase = True
@@ -146,11 +123,11 @@ if not __files_exist():
     if input_passphrase:
         try:
             print("Note: `getpass` function is being used. Input IS being received.")
-            __dot_secrets = __decrypt(gp(".secrets: "), ".secrets")
-            __access_keys = __decrypt(gp("accessKeys: "), "accessKeys.gpg", True)
-            __credentials = __decrypt(gp("credentials: "), "credentials.gpg", True)
+            dot_secrets_path = __decrypt(gp(".secrets: "), ".secrets")
+            access_keys_path = __decrypt(gp("accessKeys: "), "accessKeys.gpg", True)
+            credentials_path = __decrypt(gp("credentials: "), "credentials.gpg", True)
             # Once everything is set, get the decrypted json file.
-            with open(__dot_secrets, "r") as file:
+            with open(dot_secrets_path, "r") as file:
                 dot_secrets = json.load(file)
                 dot_secrets_formatted = json.dumps(dot_secrets, indent=4)
         except Exception as e:
@@ -161,10 +138,10 @@ if not __files_exist():
 else:
     print("Data was already decrypted.")
 
-access_keys: DataFrame = __load_csv(__access_keys, "Secret")
-"""CSV Access keys for... who knows."""
-credentials: DataFrame = __load_csv(__credentials, "Password")
-"""CSV Credentials for... :)."""
+access_keys: DataFrame = __load_csv(access_keys_path, "Secret")
+"""CSV Access keys for AWS CLI. It must contain 'ID' and 'Secret' keys."""
+credentials: DataFrame = __load_csv(credentials_path, "Password")
+"""CSV Credentials for AWS CLI. it must contain 'User', 'Password', and 'Console' keys."""
 
 if flag_secrets:
     print(f"Hiding secret data from the terminal will also censor the {LE_SECRETS}!")
@@ -175,9 +152,14 @@ else:
         f"credentials:\n{credentials}"
     )
 
-unsecure: str = dot_secrets["unsecure"]
-rds_secrets: Dict[str, str] = dot_secrets["RDS"]
-s3_secrets: Dict[str, str] = dot_secrets["S3"]
-dynamo_secret: str = dot_secrets["DynamoDB"]
+
+def __update_value(key: str) -> Any:
+    return dot_secrets[key]
+
+
+unsecure = __update_value("unsecure")
+rds_secrets = __update_value("RDS")
+s3_secrets = __update_value("S3")
+dynamo_secret = __update_value("DynamoDB")
 
 print("[clownkey end]\n\n\n")
