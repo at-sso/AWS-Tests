@@ -10,6 +10,7 @@ __all__ = [
     "dynamo_secret",
     "lambda_id",
     "lambda_role",
+    "lambda_arn",
     "dot_secrets_formatted",
     "this_path",
     "easter_egg",
@@ -44,6 +45,7 @@ dot_secrets: Dict[str, Any] = {
     "LambdaRole": {
         "id": "123456789012",
         "role": "service-role/",
+        "arn": "arn:aws:lambda:",
     },
 }
 """The '.secrets' JSON credentials."""
@@ -67,6 +69,9 @@ lambda_id: str = ""
 
 lambda_role: str = ""
 """Generic lambda role."""
+
+lambda_arn: str = ""
+"""Generic lambda ARN."""
 
 dot_secrets_formatted: str = ""
 """The '.secrets' JSON credentials, formatted. Useful for printing."""

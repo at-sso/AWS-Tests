@@ -159,6 +159,6 @@ dynamo_secret = dot_secrets["DynamoDB"]
 lambda_secrets = dot_secrets["Lambda"]
 lambda_id = lambda_secrets["id"]
 lambda_role = lambda_secrets["role"]
-
+lambda_arn = lambda_secrets["arn"]
 
 print("[clownkey end]\n\n\n")
