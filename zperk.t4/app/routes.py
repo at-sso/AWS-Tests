@@ -116,3 +116,8 @@ def update_loan(id: int):
         return redirect(url_for("main.manage_loans"))
 
     return render_template("update_loan.html", loan=loan)
+
+
+@main_bp.route("/helloworld")
+def hello():
+    return render_template("hello_world.html")
