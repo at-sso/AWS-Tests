@@ -9,3 +9,5 @@
 - [Library Management Web Application](./zperk.t4/readme.md)
 - [DynamoDB Library Management System](./zperk.t5/readme.md)
 - [AWS Lambda Book Loan Management](./zperk.t6/readme.md)
+- [Book Store Chatbot](./zperk.t7/readme.md)
+- [Image Recognition with Amazon Rekognition](./zperk.t8/readme.md)
